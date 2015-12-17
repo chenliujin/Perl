@@ -1,0 +1,24 @@
+<h1>依赖包</h1>
+<pre>
+# yum update perl
+# yum install -y perl-Net-SSLeay
+yum install -y perl-IO-Socket-SSL	
+</pre>
+
+<h1>修改 sendEmail 中的 SSL Version，使其和 perl-IO-Socket-SSL 中的一致</h1>
+<pre>
+# vim /usr/share/perl5/vendor_perl/IO/Socket/SSL.pm
+37 SSL_version => 'SSLv23:!SSLv2',
+
+# vim sendEmail
+1906 if (! IO::Socket::SSL->start_SSL($SERVER, SSL_version => 'SSLv3 TLSv1')) {
+=> 
+1906 if (! IO::Socket::SSL->start_SSL($SERVER, SSL_version => 'SSLv23:!SSLv2')) {	
+</pre>
+
+<h1>SMTP 端口参考</h1>
+<pre>
+25: default
+TLS/STARTTLS 的端口：587
+SSL 的端口：465	
+</pre>
